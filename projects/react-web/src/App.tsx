@@ -8,14 +8,18 @@ import { findRootScene } from "./AppendScene";
 import { AttachMMDFunction } from "./MMDScene";
 
 function App() {
+  console.log(process.env);
   // TwinMakerのシーンを読み込む
-  const sceneLoader = initialize(process.env.AWS_WORKSPACE_NAME ?? "", {
-    awsCredentials: {
-      accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? "",
-      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? "",
-    },
-    awsRegion: process.env.AWS_REGION ?? "",
-  }).s3SceneLoader(process.env.AWS_SCENE_NAME ?? "");
+  const sceneLoader = initialize(
+    process.env.REACT_APP_AWS_WORKSPACE_NAME ?? "",
+    {
+      awsCredentials: {
+        accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID ?? "",
+        secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY ?? "",
+      },
+      awsRegion: process.env.REACT_APP_AWS_REGION ?? "",
+    }
+  ).s3SceneLoader(process.env.REACT_APP_AWS_SCENE_NAME ?? "");
 
   // 初期化フラグ
   const [initializedFlag, setInitializedFlag] = useState(false);
