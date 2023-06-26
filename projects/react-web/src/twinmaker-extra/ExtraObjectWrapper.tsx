@@ -7,6 +7,7 @@ export class ExtraObjectWrapper {
   protected _rotate: THREE.Euler;
   protected _scale: THREE.Vector3;
   protected _anchor: IAnchorComponent;
+  protected _state: string | number;
 
   constructor(
     position: THREE.Vector3,
@@ -18,7 +19,24 @@ export class ExtraObjectWrapper {
     this._rotate = rotate;
     this._scale = scale;
     this._anchor = anchor;
+    this._state = "";
   }
 
-  observeController(controller: SceneController) {}
+  get anchor() {
+    return this._anchor;
+  }
+
+  observeController(controller: SceneController) {
+    controller.addSubscribe(this);
+  }
+
+  stateChange(newState: string | number) {
+    if (this._state === newState) {
+      return;
+    }
+    this._state = newState;
+    this.onChangeState(newState);
+  }
+
+  onChangeState(newState: string | number) {}
 }

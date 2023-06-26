@@ -2,6 +2,16 @@ import * as THREE from "three";
 import { ISceneNodeInternal } from "@iot-app-kit/scene-composer/dist/src/store";
 import { findRootScene, getState, setupSceneForMMD } from "../AppendScene";
 import { ISceneFieldInterface } from "./SceneField";
+import { ExtraObjectWrapper } from "./ExtraObjectWrapper";
+import {
+  IDataBindingTemplate,
+  IDataInput,
+  IRuleBasedMap,
+} from "@iot-app-kit/scene-composer";
+import {
+  dataBindingValuesProvider,
+  ruleEvaluator,
+} from "@iot-app-kit/scene-composer/dist/src/utils/dataBindingUtils";
 
 export enum SceneControllerState {
   Initialize,
@@ -11,9 +21,12 @@ export enum SceneControllerState {
 export class SceneController {
   private _composerId: string;
   private _interface: ISceneFieldInterface;
+  private _objects: ExtraObjectWrapper[];
+
   constructor(composeId: string, sceneInterface: ISceneFieldInterface) {
     this._composerId = composeId;
     this._interface = sceneInterface;
+    this._objects = [];
   }
 
   private searchRootScene(
@@ -72,5 +85,35 @@ export class SceneController {
       }
     }
     return state;
+  }
+
+  execData(
+    dataInput: IDataInput | undefined,
+    dataBindingTemplate: IDataBindingTemplate | undefined,
+    getSceneRuleMapById: (
+      id?: string | undefined
+    ) => Readonly<IRuleBasedMap | undefined>
+  ) {
+    this._objects.forEach((wrapper) => {
+      const anchor = wrapper.anchor;
+      const values: Record<string, unknown> = dataBindingValuesProvider(
+        dataInput,
+        anchor.valueDataBinding,
+        dataBindingTemplate
+      );
+      const ruleId = anchor.ruleBasedMapId;
+      const ruleTarget = ruleEvaluator(
+        "current",
+        values,
+        getSceneRuleMapById(ruleId)
+      );
+      if (ruleTarget) {
+        wrapper.stateChange(ruleTarget);
+      }
+    });
+  }
+
+  addSubscribe(subscriber: ExtraObjectWrapper) {
+    this._objects.push(subscriber);
   }
 }

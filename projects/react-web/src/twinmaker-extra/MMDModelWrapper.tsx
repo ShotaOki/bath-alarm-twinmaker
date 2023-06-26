@@ -16,7 +16,7 @@ export interface StateChangeEvent {
   onChangeState: (
     mesh: MMDMesh,
     model: MMDModelWrapper,
-    state: string
+    state: string | number
   ) => string;
 }
 
@@ -67,7 +67,7 @@ export class MMDModelWrapper extends ExtraObjectWrapper {
     return this;
   }
 
-  stateChange(newState: string) {
+  onChangeState(newState: string | number) {
     if (this._stateChange && this._mesh && this._mixier) {
       const animationLoader = new MMDLoader();
       const animationName = this._stateChange.onChangeState(

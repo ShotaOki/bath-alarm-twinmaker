@@ -33,6 +33,10 @@ function App() {
   const getObject3DBySceneNodeRef = useStore(composerId)(
     (state) => state.getObject3DBySceneNodeRef
   );
+  // データ参照変数を取る
+  const { dataInput, dataBindingTemplate, getSceneRuleMapById } = useStore(
+    composerId
+  )((state) => state);
 
   /** 状態の管理フラグ */
   let [initializedFlag, setInitializedFlag] = useState(
@@ -77,12 +81,21 @@ function App() {
       setInitializedFlag(
         controller.exec(initializedFlag, nodeMap, getObject3DBySceneNodeRef)
       );
+      controller.execData(dataInput, dataBindingTemplate, getSceneRuleMapById);
     }, 500);
     // useEffectのデストラクタ
     return () => {
       clearInterval(timer);
     };
-  }, [nodeMap, getObject3DBySceneNodeRef, initializedFlag, controller]);
+  }, [
+    nodeMap,
+    getObject3DBySceneNodeRef,
+    initializedFlag,
+    controller,
+    dataInput,
+    dataBindingTemplate,
+    getSceneRuleMapById,
+  ]);
 
   return (
     <div className="App">
