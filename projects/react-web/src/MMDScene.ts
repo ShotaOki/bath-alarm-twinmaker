@@ -2,8 +2,6 @@ import * as THREE from "three";
 import { MMDLoader } from "three/examples/jsm/loaders/MMDLoader";
 
 export function AttachMMDFunction(scene: THREE.Scene) {
-  scene.add(new THREE.AmbientLight(0xffffff, 0.7));
-
   const loader = new MMDLoader();
   const animationLoader = new MMDLoader();
   let mixer: THREE.AnimationMixer;
