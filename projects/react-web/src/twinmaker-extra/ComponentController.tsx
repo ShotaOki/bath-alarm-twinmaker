@@ -4,25 +4,27 @@ import {
 } from "@iot-app-kit/scene-composer";
 import { ISceneNodeInternal } from "@iot-app-kit/scene-composer/dist/src/store";
 import { MMDModelWrapper } from "./MMDModelWrapper";
+import { SearchTagsCallback } from "./DataType";
 
 export function searchTag(
   nodeMap: Record<string, ISceneNodeInternal>,
   requiredName: string,
-  callback: (ref: string, anchor: IAnchorComponent) => void
+  callback: SearchTagsCallback
 ) {
   for (let ref of Object.keys(nodeMap)) {
     const node = nodeMap[ref];
     // タグ名が一致するのなら処理をする
     if (node.name === requiredName) {
-      executeIfNodeIsTag(ref, node, callback);
+      return executeIfNodeIsTag(ref, node, callback);
     }
   }
+  return undefined;
 }
 
 function executeIfNodeIsTag(
   ref: string,
   node: ISceneNodeInternal,
-  callback: (ref: string, anchor: IAnchorComponent) => void
+  callback: SearchTagsCallback
 ) {
   const type = node.components.map((component) => component.type);
   // コンポーネントがタグであるとき
@@ -30,11 +32,11 @@ function executeIfNodeIsTag(
     for (let component of node.components) {
       if (component.type === KnownComponentType.Tag) {
         // タグの詳細情報を渡す
-        callback(ref, component as IAnchorComponent);
-        return;
+        return callback(ref, component as IAnchorComponent);
       }
     }
   }
+  return undefined;
 }
 
 export function replaceTagToMMD(

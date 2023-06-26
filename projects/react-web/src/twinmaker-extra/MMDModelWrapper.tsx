@@ -51,7 +51,7 @@ export class MMDModelWrapper extends ExtraObjectWrapper {
       parameter.rootScene.add(mesh);
       this._mesh = mesh;
 
-      that.stateChange("current");
+      that.stateChange("init");
 
       // アニメーションを実行する
       const clock = new THREE.Clock();
