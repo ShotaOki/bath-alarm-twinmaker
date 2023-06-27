@@ -3,7 +3,7 @@ REM 値をSiteWiseセンサーに書き変えて、このファイルをsendbatc
 REM .
 REM    assetid: str SiteWiseの送信先アセットID
 REM    propertyid: str SiteWiseの送信先プロパティID
-REM    datatype: str データ型(doubleValue/stringValue/integerValue/booleanValueのどれか)
-REM    value: float | int | bool | str 送りたい値
+REM    datatype: str データ型(doubleValueで固定)
+REM    value: float 送りたい値
 
 python app.py --value XXXXXXXXXX --assetid XXXXX --propertyid XXXXX --datatype doubleValue
