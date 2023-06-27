@@ -88,7 +88,7 @@ function App() {
           };
         },
       }),
-    [getObject3DBySceneNodeRef]
+    [composerId, getObject3DBySceneNodeRef]
   );
 
   // nodeMapの更新まではフックできるが、r3fの初期化はフックできない
