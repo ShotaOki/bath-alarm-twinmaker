@@ -9,6 +9,8 @@ import {
 } from "./twinmaker-extra/SceneController";
 import { replaceTagToMMD } from "./twinmaker-extra/ComponentController";
 import { generateUUID } from "three/src/math/MathUtils";
+import { DefaultAnchorStatus } from "@iot-app-kit/scene-composer";
+import { stringToDefaultAnchorStatus } from "./twinmaker-extra/TwinMakerTagNames";
 
 function App() {
   // TwinMakerのシーンを読み込む
@@ -26,6 +28,7 @@ function App() {
   // Viewportを定義する
   const viewport = useMemo(() => {
     return {
+      // 10m = 過去10分以内の状態を参照する
       duration: "10m",
     };
   }, []);
@@ -81,8 +84,13 @@ function App() {
                 .bindOnStateChangeEvent({
                   /** タグの状態が変わったのであれば通知を受ける */
                   onChangeState(mesh, model, state) {
-                    console.log(state);
-                    return "mmd/Alicia/MMD Motion/2分ループステップ1.vmd";
+                    // 今のタグの状態に応じて、モーションを変更する
+                    switch (stringToDefaultAnchorStatus(state)) {
+                      case DefaultAnchorStatus.Error:
+                        return "mmd/Alicia/MMD Motion/2分ループステップ2.vmd";
+                      default: // DefaultAnchorStatus.Info
+                        return "mmd/Alicia/MMD Motion/2分ループステップ1.vmd";
+                    }
                   },
                 }),
           };

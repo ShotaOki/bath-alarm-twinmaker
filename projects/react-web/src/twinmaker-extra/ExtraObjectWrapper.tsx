@@ -21,6 +21,10 @@ export class ExtraObjectWrapper {
     this._state = "";
   }
 
+  /**
+   * 状態を変更する
+   * @param newState 次の状態
+   */
   stateChange(newState: string | number) {
     if (this._state === newState) {
       return;
@@ -29,5 +33,9 @@ export class ExtraObjectWrapper {
     this.onChangeState(newState);
   }
 
-  onChangeState(newState: string | number) {}
+  /**
+   * 子クラスで実装: イベント通知関数
+   * @param newState 次の状態
+   */
+  protected onChangeState(newState: string | number) {}
 }

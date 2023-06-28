@@ -26,7 +26,7 @@ def main(args: Arguments):
     send_value = {}
     send_value[args.datatype] = args.value
 
-    client = boto3.client("iotsitewise")
+    client = boto3.Session(region_name="us-east-1").client("iotsitewise")
     client.batch_put_asset_property_value(
         entries=[
             {
