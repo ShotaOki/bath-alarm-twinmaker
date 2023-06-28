@@ -79,17 +79,21 @@ function App() {
                 ?.create({
                   rootScene, // ルートになるシーン
                   scale: 0.088, // オプション: 表示スケール
-                  pmxPath: "mmd/UsadaPekora/PMX/UsadaPekora.pmx", // MMDファイル
+                  // pmxPath: "mmd/UsadaPekora/PMX/UsadaPekora.pmx", // MMDファイル
+                  pmxPath: "mmd/yyb_miku/yyb_hatsune_miku.pmx", // MMDファイル
                 })
                 .bindOnStateChangeEvent({
                   /** タグの状態が変わったのであれば通知を受ける */
                   onChangeState(mesh, model, state) {
+                    if (state === "init") {
+                      return "";
+                    }
                     // 今のタグの状態に応じて、モーションを変更する
                     switch (stringToDefaultAnchorStatus(state)) {
                       case DefaultAnchorStatus.Error:
-                        return "mmd/Alicia/MMD Motion/2分ループステップ2.vmd";
+                        return "mmd/motion/手を振るモーション2/手振_スタンダード(右手).vmd";
                       default: // DefaultAnchorStatus.Info
-                        return "mmd/Alicia/MMD Motion/2分ループステップ1.vmd";
+                        return "mmd/Alicia/MMD Motion/2分ループステップ5.vmd";
                     }
                   },
                 }),
