@@ -1,46 +1,55 @@
-# Getting Started with Create React App
+# Bath Sensor Twinmaker -- React Project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## この React プロジェクトでできること
 
-## Available Scripts
+iot-app-kit を拡張したプロジェクトです
 
-In the project directory, you can run:
+- TwinMaker のタグを MMD に置き換えることができます
+- 色の変わるルールイベントをトリガーにして、モーションを切り替えることができます
 
-### `npm start`
+## 事前準備
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### 開発環境
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+このプロジェクトには、以下のものが必要です
 
-### `npm test`
+- Node.js（18 以上を推奨）
+- VSCode
+- AWS 環境
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### プロジェクトに必要な認証情報の設定
 
-### `npm run build`
+.env.template をコピーして、.env を作成してください
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+AWS の認証情報、TwinMaker のシーン情報、SiteWise のデータ情報を書き込んでください
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+> 重要！！: .env は絶対に Git にコミットしないでください
+> 重要！！: AWS の認証情報をプロジェクトに含めたものは、ローカルでの確認にだけ使ってください。サーバで公開しないでください
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### MMD ファイル、モーションファイルの準備
 
-### `npm run eject`
+任意の MMD ファイル、モーションファイルをダウンロードして、public ディレクトリに配置してください
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+## プロジェクトのコマンド
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### プロジェクトの導入方法
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+以下のコマンドを実行して、プロジェクトに必要な依存ライブラリをインストールします
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+`npm install`
 
-## Learn More
+### プロジェクトの実行方法
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+以下のコマンドを実行して、プロジェクトのローカルサーバを立ち上げます
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+`npm run start`
+
+ブラウザで`http://localhost:3000`を開くと、TwinMaker のプロジェクトを確認することができます
+
+### プロジェクトのビルド方法
+
+以下のコマンドを実行して、プロジェクトをビルドします
+
+`npm run build`
+
+> ビルドして公開する際は、認証情報を.env からとるのではなく、Cognito から取るように変更してください
