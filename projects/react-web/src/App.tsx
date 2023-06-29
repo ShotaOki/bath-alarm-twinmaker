@@ -75,11 +75,12 @@ function App() {
         overrideTags(rootScene) {
           return {
             // TwinMakerのタグをMMDモデルに置き換える
-            "Hatsune-Miku": (ref, anchor) =>
+            "Usada-Pekora": (ref, anchor) =>
               replaceTagToMMD(ref, anchor, getObject3DBySceneNodeRef)
                 ?.create({
                   rootScene, // ルートになるシーン
                   scale: 0.088, // オプション: 表示スケール
+                  angle: -20, // オプション: MMDの角度(単位はDegree)
                   pmxPath: "mmd/UsadaPekora/PMX/UsadaPekora.pmx", // MMDファイル
                   motionMap: {
                     // モーションファイル
@@ -103,13 +104,16 @@ function App() {
                     // 今のタグの状態に応じて、モーションを変更する
                     switch (stringToDefaultAnchorStatus(state)) {
                       case DefaultAnchorStatus.Error:
+                        // モーションファイルのキーを返却してモーション再生
+                        // 配列で投げたモーションは同時に再生する（合成される）
+                        // ※MMDは表情と体の一部のモーションが別ファイルで提供されることがあるため
                         return [
                           "swing-hand",
                           "swing-hand-body",
                           "swing-hand-face",
                         ];
                       default: // DefaultAnchorStatus.Info
-                        // return "mmd/Alicia/MMD Motion/2分ループステップ5.vmd";
+                        // モーションファイルのキーを返却してモーション再生
                         return ["motion-waiting"];
                     }
                   },
