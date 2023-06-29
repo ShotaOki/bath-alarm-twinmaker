@@ -13,6 +13,7 @@ import {
   ruleEvaluator,
 } from "@iot-app-kit/scene-composer/dist/src/utils/dataBindingUtils";
 import { searchTag } from "./ComponentController";
+import { SystemLoadingStatus } from "./DataType";
 
 export enum SceneControllerState {
   Initialize,
@@ -137,7 +138,7 @@ export class SceneController {
         // TwinMakerの色変更ルールを参照する
         const ruleId = wrapper._anchor.ruleBasedMapId;
         const ruleTarget = ruleEvaluator(
-          "default",
+          SystemLoadingStatus.UndefinedState,
           values,
           getSceneRuleMapById(ruleId)
         );

@@ -1,11 +1,17 @@
 import { ExtraObjectWrapper } from "./ExtraObjectWrapper";
 import * as THREE from "three";
 import { MMDLoader } from "three/examples/jsm/loaders/MMDLoader";
+import { SystemLoadingStatus } from "./DataType";
 
 export interface MMDModelParameter {
+  // モデルを配置するルートシーン
   rootScene: THREE.Scene;
+  // モーションの表示サイズ
   scale?: number;
+  // MMDモデルのファイルパス
   pmxPath: string;
+  // モーションの読み込みリスト, モーション名: ファイルパス
+  motionMap?: { [key: string]: string };
 }
 type MMDMesh = THREE.SkinnedMesh<
   THREE.BufferGeometry,
@@ -18,7 +24,7 @@ export interface StateChangeEvent {
     mesh: MMDMesh,
     model: MMDModelWrapper,
     state: string | number
-  ) => string;
+  ) => string[];
 }
 
 export class MMDModelWrapper extends ExtraObjectWrapper {
@@ -28,6 +34,8 @@ export class MMDModelWrapper extends ExtraObjectWrapper {
   private _stateChange?: StateChangeEvent;
   // アニメーションを管理するミキサー
   private _mixier?: THREE.AnimationMixer;
+  // アニメーションのマップ
+  private _motionMap?: { [key: string]: THREE.AnimationClip };
 
   /**
    * 初期化する
@@ -70,7 +78,37 @@ export class MMDModelWrapper extends ExtraObjectWrapper {
       this._mesh = mesh;
 
       // 状態を初期化する
-      that.stateChange("init");
+      that.stateChange(SystemLoadingStatus.Init);
+
+      // モーションを読み込む
+      if (parameter.motionMap) {
+        const motionKeyList = Object.keys(parameter.motionMap);
+        Promise.all(
+          motionKeyList.map(
+            (key) =>
+              new Promise((resolve) =>
+                // アニメーションを非同期で読み込む
+                new MMDLoader().loadAnimation(
+                  parameter.motionMap![key],
+                  mesh,
+                  (animation) => {
+                    // 非同期読み込みの完了を通知
+                    resolve(animation);
+                  }
+                )
+              )
+          )
+        ).then((results) => {
+          const motionMap: { [key: string]: THREE.AnimationClip } = {};
+          results.forEach((motion, index) => {
+            motionMap[motionKeyList[index]] = motion as THREE.AnimationClip;
+          });
+          this._flagLoaded = true;
+          this._motionMap = motionMap;
+        });
+      } else {
+        this._flagLoaded = true;
+      }
 
       // アニメーションを実行する
       const clock = new THREE.Clock();
@@ -94,26 +132,26 @@ export class MMDModelWrapper extends ExtraObjectWrapper {
    */
   protected onChangeState(newState: string | number) {
     if (this._stateChange && this._mesh && this._mixier) {
-      const animationLoader = new MMDLoader();
-      const animationName = this._stateChange.onChangeState(
+      const animationNames = this._stateChange.onChangeState(
         this._mesh!,
         this,
         newState
       );
       // もしアニメーションの戻り値がないのならアニメーションを終了する
-      if (!(animationName && animationName.length)) {
+      if (!(animationNames && animationNames.length)) {
         if (this._mixier) {
           this._mixier.stopAllAction();
           return;
         }
       }
       // 戻り値で受け取ったアニメーションを再生する
-      animationLoader.loadAnimation(animationName, this._mesh, (motion) => {
-        if (this._mixier) {
-          this._mixier.stopAllAction();
-          this._mixier.clipAction(motion as THREE.AnimationClip).play();
+      if (this._mixier && this._motionMap) {
+        this._mixier.stopAllAction();
+        for (let name of animationNames) {
+          const motion = this._motionMap[name];
+          this._mixier.clipAction(motion).play();
         }
-      });
+      }
     }
   }
 

@@ -11,6 +11,7 @@ import { replaceTagToMMD } from "./twinmaker-extra/ComponentController";
 import { generateUUID } from "three/src/math/MathUtils";
 import { DefaultAnchorStatus } from "@iot-app-kit/scene-composer";
 import { stringToDefaultAnchorStatus } from "./twinmaker-extra/TwinMakerTagNames";
+import { SystemLoadingStatus } from "./twinmaker-extra/DataType";
 
 function App() {
   // TwinMakerのシーンを読み込む
@@ -79,21 +80,37 @@ function App() {
                 ?.create({
                   rootScene, // ルートになるシーン
                   scale: 0.088, // オプション: 表示スケール
-                  // pmxPath: "mmd/UsadaPekora/PMX/UsadaPekora.pmx", // MMDファイル
-                  pmxPath: "mmd/yyb_miku/yyb_hatsune_miku.pmx", // MMDファイル
+                  pmxPath: "mmd/UsadaPekora/PMX/UsadaPekora.pmx", // MMDファイル
+                  motionMap: {
+                    // モーションファイル
+                    "swing-hand":
+                      "mmd/motion/手を振るモーション2/手振_スタンダード(右手).vmd",
+                    "swing-hand-body":
+                      "mmd/motion/手を振るモーション2/体_スタンダード(右手用).vmd",
+                    "swing-hand-face":
+                      "mmd/motion/手を振るモーション2/表情.vmd",
+                    "motion-waiting":
+                      "mmd/motion/5.待機モーション・その他/待機モーション/1.呼吸_(90f_移動なし).vmd",
+                  },
                 })
                 .bindOnStateChangeEvent({
                   /** タグの状態が変わったのであれば通知を受ける */
                   onChangeState(mesh, model, state) {
-                    if (state === "init") {
-                      return "";
+                    // 初期化実行の時は、モーションを実行しない
+                    if (state === SystemLoadingStatus.Init) {
+                      return [];
                     }
                     // 今のタグの状態に応じて、モーションを変更する
                     switch (stringToDefaultAnchorStatus(state)) {
                       case DefaultAnchorStatus.Error:
-                        return "mmd/motion/手を振るモーション2/手振_スタンダード(右手).vmd";
+                        return [
+                          "swing-hand",
+                          "swing-hand-body",
+                          "swing-hand-face",
+                        ];
                       default: // DefaultAnchorStatus.Info
-                        return "mmd/Alicia/MMD Motion/2分ループステップ5.vmd";
+                        // return "mmd/Alicia/MMD Motion/2分ループステップ5.vmd";
+                        return ["motion-waiting"];
                     }
                   },
                 }),

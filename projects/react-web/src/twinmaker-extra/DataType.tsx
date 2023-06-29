@@ -7,3 +7,8 @@ export type SearchTagsCallback = (
 ) => ExtraObjectWrapper | undefined;
 
 export type OverrideTagsParameter = { [key: string]: SearchTagsCallback };
+
+export namespace SystemLoadingStatus {
+  export const Init: string = "init";
+  export const UndefinedState: string = "undefined";
+}
