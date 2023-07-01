@@ -1,6 +1,8 @@
 ## このアプリでできること
 
-Switch Bot 防水温湿度計の計測データを取得します
+Switch Bot 防水温湿度計の計測データを取得して、SiteWise に転送します
+
+AWS CLI の認証情報をあらかじめ設定しておいてください。
 
 ## 前提
 
@@ -11,22 +13,22 @@ Switch Bot 防水温湿度計の計測データを取得します
 
 **Step 1: 仮想環境を作ります**
 
-```bash
-# コマンドプロンプト：このディレクトリで実行
+```bat
+REM コマンドプロンプト：このディレクトリで実行
 python -m venv .
 ```
 
 **Step 2: Python の仮想環境に入ります**
 
-```bash
-# コマンドプロンプト：このディレクトリで実行
-Scripts\\activate.bat
+```bat
+REM コマンドプロンプト：このディレクトリで実行
+Scripts\activate.bat
 ```
 
 **Step 3: 仮想環境に必要なファイルをインストールします**
 
-```bash
-# 仮想環境内で実施
+```bat
+REM 仮想環境内で実施
 pip install -r requirements.txt
 ```
 
@@ -36,16 +38,27 @@ pip install -r requirements.txt
 
 **Step 1: （※もし入っていないのなら）Python の仮想環境に入ります**
 
-```bash
-# コマンドプロンプト：このディレクトリで実行
-Scripts\\activate.bat
+```bat
+REM コマンドプロンプト：このディレクトリで実行
+Scripts\activate.bat
 ```
 
 **Step 2: src ディレクトリに移動して、アプリを実行します**
 
-```bash
-# 仮想環境内で実施
+```bat
+REM 仮想環境内で実施
 cd src
 
 python app.py
+```
+
+**デバッグ用: 以下のように書くと、SiteWise に 1 件のデータを送信します**
+
+※`99.9`の部分は任意の数字です
+
+```bat
+REM 仮想環境内で実施
+cd src
+
+python app.py --value 99.9
 ```

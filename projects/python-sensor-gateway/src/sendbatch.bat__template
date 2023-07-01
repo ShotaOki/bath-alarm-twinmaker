@@ -1,9 +1,0 @@
-REM Property: ====================
-REM 値をSiteWiseセンサーに書き変えて、このファイルをsendbatch.batにリネームしてください
-REM .
-REM    assetid: str SiteWiseの送信先アセットID
-REM    propertyid: str SiteWiseの送信先プロパティID
-REM    datatype: str データ型(doubleValueで固定)
-REM    value: float 送りたい値
-
-python app.py --value XXXXXXXXXX --assetid XXXXX --propertyid XXXXX --datatype doubleValue
